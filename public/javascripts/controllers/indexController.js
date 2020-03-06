@@ -1,4 +1,4 @@
-app.controller('indexController', ($scope, indexFactory) =>{
+app.controller('indexController', ($scope, indexFactory, configFactory) =>{
     //$scope'tan sonraki kısım view kısmında kullanacağımız function'ın adını belirler.
 
     $scope.messages=[]
@@ -35,7 +35,9 @@ app.controller('indexController', ($scope, indexFactory) =>{
             reconnectionDelay:600
         }
         try{
-        const socket = await indexFactory.connectSocket('http://localhost:3000', connectionOptions);
+            const socketUrl=await configFactory.getConfig();
+
+            const socket = await indexFactory.connectSocket(socketUrl.data.sokcetUrl, connectionOptions);
             socket.emit('newUser', {username:username});
 
             socket.on('initPlayers', (players) => {
